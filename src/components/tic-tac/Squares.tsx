@@ -5,23 +5,37 @@ import { rows, colums } from "./helper";
 import "styled-components/macro";
 
 export default function Squares() {
-  const { current, isDraw, winner, handleClick, isTheWinnerBlock } =
-    useTicTac();
+  const {
+    History,
+    currentStepNumber,
+    current,
+    isDraw,
+    winner,
+    handleClick,
+    isTheWinnerBlock,
+  } = useTicTac();
+  /**
+   *
+   * @param block current block number
+   * @param row speciffied row propertery defined previously
+   * @param col speciffied col propertery defined previously
+   * @returns
+   */
   const renderSquare = (block, row, col) => {
     return (
       <>
         <input
           disabled={Boolean(winner)}
           key={block}
-          className={`${col.positionHorizontal}${row.positionVertical} turn-${block} `}
-          id={`block${block}-${row.value}-${col.value}`}
+          className={`${col.positionHorizontal}${row.positionVertical} turn-${block} `} //like left top position turn number-1
+          id={`block${block}-${row.value}-${col.value}`} //like bolck1-0-1
           type="radio"
           onClick={() => handleClick(block)}
           css={`
             :checked + label {
               background-color: ${isTheWinnerBlock(block)
                 ? "#047857"
-                : current[block] == "O"
+                : current[block] === "O"
                 ? "#ecaf4f"
                 : "#dc685a"};
             }
@@ -29,7 +43,7 @@ export default function Squares() {
         />
         <label
           className={`turn-${block} text-6xl font-extrabold`}
-          htmlFor={`block${block}-${row.value}-${col.value}`}
+          htmlFor={`block${block}-${row.value}-${col.value}`} //like bolck1-0-1
           css={`
             &:after {
               content: ${current[block]};
@@ -40,7 +54,57 @@ export default function Squares() {
         >
           {current[block]}
         </label>
+      </>
+    );
+  };
+  /**
+   *
+   * @param row 3
+   * @param col 3
+   * @returns
+   */
+  const createBoard = (row, col) => {
+    const board = [];
+    let cellCounter = 0;
 
+    for (let i = 0; i < row; i += 1) {
+      for (let j = 0; j < col; j += 1) {
+        board.push(renderSquare(cellCounter++, rows[i], colums[j]));
+      }
+    }
+
+    return board;
+  };
+  const renderAllmoves = () => {
+    return History.map((step, move) => {
+      const currentLocation = step.currentLocation
+        ? `(${step.currentLocation})`
+        : "";
+      const desc = step.stepNumber ? `Go to move #${step.stepNumber}` : "";
+      const classButton = move === currentStepNumber ? "text-green-600" : "";
+
+      return (
+        <li key={move}>
+          <button
+            className={`${classButton} button`}
+            onClick={() => this.jumpTo(move)}
+          >
+            {`${desc} ${currentLocation}`}
+          </button>
+        </li>
+      );
+    });
+  };
+  return (
+    <div>
+      <div className="tic-tac-toe ">
+        {/* 
+          create 3*3  tic tac toe square board
+         */}
+        {createBoard(3, 3)}
+        {/* 
+          Make decition based on user turns and after finish the the game reset it
+         */}
         <div
           css={`
             background: transparent;
@@ -54,7 +118,6 @@ export default function Squares() {
             top: 5px;
             text-align: center;
             z-index: 11;
-
             @media (min-width: 450px) {
               padding-top: 110px;
             }
@@ -91,25 +154,10 @@ export default function Squares() {
             Restart
           </button>
         </div>
-      </>
-    );
-  };
-
-  const createBoard = (row, col) => {
-    const board = [];
-    let cellCounter = 0;
-
-    for (let i = 0; i < row; i += 1) {
-      for (let j = 0; j < col; j += 1) {
-        board.push(renderSquare(cellCounter++, rows[i], colums[j]));
-      }
-    }
-
-    return board;
-  };
-  return (
-    <div>
-      <div className="tic-tac-toe">{createBoard(3, 3)}</div>
+      </div>
+      <div className="flex items-center justify-center">
+        <ol>{renderAllmoves()}</ol>
+      </div>
     </div>
   );
 }

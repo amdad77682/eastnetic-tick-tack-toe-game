@@ -1,4 +1,9 @@
 import React from "react";
+/**
+ *
+ * @param squares the square block clicked that was saved in history
+ * @returns
+ */
 const calculateWinner = (squares) => {
   const lines = [
     [0, 1, 2],
@@ -20,7 +25,11 @@ const calculateWinner = (squares) => {
 
   return { winner: null, winnerRow: null };
 };
-
+/**
+ *
+ * @param move possition wised numbers
+ * @returns
+ */
 const getLocation = (move) => {
   const locationMap = {
     0: "row: 1, col: 1",
@@ -36,10 +45,15 @@ const getLocation = (move) => {
 
   return locationMap[move];
 };
+/**
+ * hook for tic tac toe game
+ * @returns
+ */
 export function useTicTac(): {
   handleClick: (i: number) => void;
   isTheWinnerBlock: (i: number) => boolean;
   currentStepNumber: number;
+  History: any;
   current: any;
   winner: string;
   isDraw: boolean;
@@ -49,7 +63,7 @@ export function useTicTac(): {
     {
       squares: Array(9).fill(null),
       currentLocation: null,
-      stepNumber: 9,
+      stepNumber: 0,
     },
   ]);
   const [currentStepNumber, setCurrentStepNumber] = React.useState(0);
@@ -58,7 +72,6 @@ export function useTicTac(): {
   const [winner, setwinners] = React.useState("");
   const [isDraw, setisDraw] = React.useState(false);
 
-  console.log(History, winnerSquares);
   React.useEffect(() => {
     const winnerFind = () => {
       const history = History.slice(0, currentStepNumber + 1);
@@ -73,7 +86,11 @@ export function useTicTac(): {
     };
     winnerFind();
   }, [History]);
-
+  /**
+   *
+   * @param i the number of square block clicked
+   * @returns
+   */
   const handleClick = (i: number) => {
     const history = History.slice(0, currentStepNumber + 1);
     const current = history[history.length - 1];
@@ -96,6 +113,11 @@ export function useTicTac(): {
     setCurrentStepNumber(History.length);
     setxIsNext(!xIsNext);
   };
+  /**
+   *
+   * @param i the square block number
+   * @returns
+   */
   const isTheWinnerBlock = (i: number) => {
     return winnerSquares &&
       (winnerSquares[0] === i ||
@@ -104,6 +126,9 @@ export function useTicTac(): {
       ? true
       : false;
   };
+  /**
+   *
+   */
   const reset = () => {
     setHisTory([
       {
@@ -119,6 +144,7 @@ export function useTicTac(): {
     handleClick,
     currentStepNumber,
     isTheWinnerBlock,
+    History,
     current: History[History.length - 1].squares,
     winner,
     isDraw,

@@ -40,6 +40,10 @@ export function useTicTac(): {
   handleClick: (i: number) => void;
   isTheWinnerBlock: (i: number) => boolean;
   currentStepNumber: number;
+  current: any;
+  winner: string;
+  isDraw: boolean;
+  reset: () => void;
 } {
   const [History, setHisTory] = React.useState([
     {
@@ -51,16 +55,32 @@ export function useTicTac(): {
   const [currentStepNumber, setCurrentStepNumber] = React.useState(0);
   const [xIsNext, setxIsNext] = React.useState<boolean>(true);
   const [winnerSquares, setwinnerSquares] = React.useState([]);
+  const [winner, setwinners] = React.useState("");
+  const [isDraw, setisDraw] = React.useState(false);
+
+  console.log(History, winnerSquares);
+  React.useEffect(() => {
+    const winnerFind = () => {
+      const history = History.slice(0, currentStepNumber + 1);
+      const current = history[history.length - 1];
+      const squares = current.squares.slice();
+      const { winner, winnerRow } = calculateWinner(squares);
+      setwinnerSquares(winnerRow);
+      setwinners(winner);
+      if (History.length == 10) {
+        setisDraw(true);
+      }
+    };
+    winnerFind();
+  }, [History]);
 
   const handleClick = (i: number) => {
     const history = History.slice(0, currentStepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     const { winner, winnerRow } = calculateWinner(squares);
-    console.log("winnerRow", winnerRow);
 
     if (winner || squares[i]) {
-      setwinnerSquares(winnerRow);
       return;
     }
     squares[i] = xIsNext ? "X" : "O";
@@ -84,10 +104,24 @@ export function useTicTac(): {
       ? true
       : false;
   };
+  const reset = () => {
+    setHisTory([
+      {
+        squares: Array(9).fill(null),
+        currentLocation: null,
+        stepNumber: 9,
+      },
+    ]);
+    setCurrentStepNumber(0);
+  };
 
   return {
     handleClick,
     currentStepNumber,
     isTheWinnerBlock,
+    current: History[History.length - 1].squares,
+    winner,
+    isDraw,
+    reset,
   };
 }

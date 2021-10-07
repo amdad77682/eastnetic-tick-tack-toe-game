@@ -10,6 +10,7 @@ export default function Squares() {
     currentStepNumber,
     current,
     isDraw,
+    xIsNext,
     winner,
     handleClick,
     isTheWinnerBlock,
@@ -32,7 +33,7 @@ export default function Squares() {
           type="radio"
           onClick={() => handleClick(block)}
           css={`
-            :checked + label {
+            &:checked + label {
               background-color: ${isTheWinnerBlock(block)
                 ? "#047857"
                 : current[block] === "O"
@@ -49,6 +50,14 @@ export default function Squares() {
               content: ${current[block]};
               color: #fff;
               opacity: 1;
+            }
+            &:hover {
+              background-color: ${!xIsNext ? "#ecaf4f" : "#dc685a"};
+              &:after {
+                content: ${xIsNext ? "X" : "O"};
+                color: #fff;
+                opacity: 1;
+              }
             }
           `}
         >

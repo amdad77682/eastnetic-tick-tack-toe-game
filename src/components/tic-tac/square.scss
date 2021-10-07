@@ -118,14 +118,5 @@ h5 {
       width: $size;
       line-height: $size;
     }
-
-    // Label hover effect
-    &:hover {
-      background-color: $hover-color;
-
-      &:after {
-        opacity: 0.4;
-      }
-    }
   }
 }

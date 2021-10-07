@@ -58,6 +58,7 @@ export function useTicTac(): {
   winner: string;
   isDraw: boolean;
   reset: () => void;
+  xIsNext: boolean;
 } {
   const [History, setHisTory] = React.useState([
     {
@@ -95,7 +96,7 @@ export function useTicTac(): {
     const history = History.slice(0, currentStepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    const { winner, winnerRow } = calculateWinner(squares);
+    const { winner } = calculateWinner(squares);
 
     if (winner || squares[i]) {
       return;
@@ -149,5 +150,6 @@ export function useTicTac(): {
     winner,
     isDraw,
     reset,
+    xIsNext,
   };
 }
